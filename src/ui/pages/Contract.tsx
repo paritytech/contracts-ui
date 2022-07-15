@@ -89,7 +89,7 @@ export function Contract() {
               </div>{' '}
               from{' '}
               <Link
-                to={`/instantiate/${document.codeHash}`}
+                to={`/add/instantiate/${document.codeHash}`}
                 className="inline-block relative bg-blue-500 text-blue-400 bg-opacity-20 text-xs px-1.5 py-1 font-mono rounded"
               >
                 {projectName}

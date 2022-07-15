@@ -9,6 +9,7 @@ import './styles/main.css';
 import '@polkadot/api-augment';
 import {
   AddContract,
+  AddExisting,
   Contract,
   Homepage,
   Instantiate,
@@ -30,9 +31,10 @@ root.render(
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<Homepage />} />
-        <Route path="add-contract" element={<AddContract />} />
-        <Route path="hash-lookup" element={<SelectCodeHash />} />
-        <Route path="instantiate" element={<Instantiate />}>
+        <Route path="add" element={<AddContract />} />
+        <Route path="add/code-hash/" element={<SelectCodeHash />} />
+        <Route path="add/existing/" element={<AddExisting />} />
+        <Route path="add/instantiate" element={<Instantiate />}>
           <Route path=":codeHash" />
         </Route>
         <Route path="contract/:address/" element={<Contract />} />

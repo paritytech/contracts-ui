@@ -5,7 +5,7 @@ describe('Flipper Contract ', () => {
   const timeout = 25000;
 
   it('contract file uploads', () => {
-    cy.visit('http://localhost:8081/instantiate');
+    cy.visit('http://localhost:8081/add/instantiate');
     cy.get('[data-cy="file-input"]').attachFile('flipper.contract');
     cy.get('[data-cy="next-btn"]').should('not.be.disabled');
   });

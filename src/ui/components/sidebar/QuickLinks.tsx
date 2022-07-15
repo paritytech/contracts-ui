@@ -27,7 +27,7 @@ export function QuickLinks() {
           <div className="none-yet">
             None yet&nbsp;
             {' • '}&nbsp;
-            <Link to={`/instantiate`}>Upload one</Link>
+            <Link to={`/add/instantiate`}>Upload one</Link>
           </div>
         )}
       </div>

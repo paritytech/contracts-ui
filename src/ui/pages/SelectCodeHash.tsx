@@ -12,7 +12,7 @@ export function SelectCodeHash() {
       help={
         <>
           You can upload and instantate new contract code{' '}
-          <Link to="/instantiate" className="text-blue-500">
+          <Link to="/add/instantiate" className="text-blue-500">
             here
           </Link>
           .

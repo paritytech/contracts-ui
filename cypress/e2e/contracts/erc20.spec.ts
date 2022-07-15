@@ -7,7 +7,7 @@ describe('ERC20 Contract ', () => {
   const allowance = 25;
 
   it('contract file uploads', () => {
-    cy.visit('http://localhost:8081/instantiate');
+    cy.visit('http://localhost:8081/add/instantiate');
     cy.get('[data-cy="file-input"]').attachFile('erc20.contract');
     cy.get('[data-cy="next-btn"]').should('not.be.disabled');
   });

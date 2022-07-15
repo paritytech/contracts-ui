@@ -34,7 +34,7 @@ export const useMetadataField = (): UseMetadataField => {
 
   useEffect((): void => {
     if (codeHashUrlParam && !codeBundle && !isLoading) {
-      navigate(`/instantiate/${codeHashUrlParam}`);
+      navigate(`/add/instantiate/${codeHashUrlParam}`);
     }
   }, [codeBundle, codeHashUrlParam, isLoading, navigate]);
 

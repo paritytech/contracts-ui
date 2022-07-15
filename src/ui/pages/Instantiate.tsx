@@ -22,7 +22,7 @@ export function Instantiate() {
               {codeHashUrlParam ? (
                 <>
                   You can upload and instantate new contract code{' '}
-                  <Link to="/instantiate" className="text-blue-500">
+                  <Link to="/add/instantiate" className="text-blue-500">
                     here
                   </Link>
                   .
@@ -30,7 +30,7 @@ export function Instantiate() {
               ) : (
                 <>
                   You can instantiate a new contract from an existing code bundle{' '}
-                  <Link to="/hash-lookup" className="text-blue-500">
+                  <Link to="/add/code-hash" className="text-blue-500">
                     here
                   </Link>
                   .

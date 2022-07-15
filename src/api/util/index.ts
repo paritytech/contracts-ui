@@ -138,6 +138,12 @@ export async function checkOnChainCode(api: ApiPromise, codeHash: string): Promi
     : false;
 }
 
+export async function checkOnChainContract(api: ApiPromise, address: string): Promise<boolean> {
+  const info = await api.query.contracts.contractInfoOf(address);
+
+  return info.isSome;
+}
+
 export async function filterOnChainCode(api: ApiPromise, items: CodeBundleDocument[]) {
   const codes: CodeBundleDocument[] = [];
   for (const item of items) {

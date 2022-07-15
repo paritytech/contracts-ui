@@ -77,7 +77,7 @@ export function LookUpCodeHash() {
           codeHash={codeHash}
           isSuccess
           name={codeBundle?.name || 'On-chain Code Exists'}
-          onClick={() => navigate(`/instantiate/${codeHash}`)}
+          onClick={() => navigate(`/add/instantiate/${codeHash}`)}
         />
       )}
     </FormField>

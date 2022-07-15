@@ -11,3 +11,4 @@ export * from './Switch';
 export * from './Tabs';
 export * from './SearchResults';
 export * from './ConnectionError';
+export * from './Validation';

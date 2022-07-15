@@ -51,7 +51,7 @@ export function onInstantiateFromCode(
           address: contract.address.toString(),
         });
 
-        await db.codeBundles.add(document);
+        await db.addCodeBundle(document);
 
         onSuccess && onSuccess(contract, blueprint);
       }

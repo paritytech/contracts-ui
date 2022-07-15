@@ -34,7 +34,7 @@ function List({ items, label }: ListProps) {
             name={codeBundle.name}
             codeHash={codeBundle.codeHash}
             key={codeBundle.codeHash}
-            onClick={() => navigate(`/instantiate/${codeBundle.codeHash}`)}
+            onClick={() => navigate(`/add/instantiate/${codeBundle.codeHash}`)}
           />
         );
       })}

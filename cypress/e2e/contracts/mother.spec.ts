@@ -3,7 +3,7 @@
 
 describe('Mother Contract ', () => {
   it('contract file uploads', () => {
-    cy.visit('http://localhost:8081/instantiate');
+    cy.visit('http://localhost:8081/add/instantiate');
     cy.get('[data-cy="file-input"]').attachFile('mother.contract');
     cy.get('[data-cy="upload-confirmation"]').should('contain', 'mother.contract');
     cy.get('.validation.success').should('be.visible').and('contain', 'Valid contract bundle');

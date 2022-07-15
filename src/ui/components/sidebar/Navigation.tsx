@@ -7,7 +7,7 @@ import { NavLink } from './NavLink';
 export function Navigation() {
   return (
     <div className="navigation">
-      <NavLink to={`/add-contract`} icon={DocumentAddIcon}>
+      <NavLink to={`/add`} icon={DocumentAddIcon}>
         Add New Contract
       </NavLink>
       <NavLink icon={CollectionIcon} to={`/`} end>

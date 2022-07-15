@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 export * from './AddContract';
+export * from './AddExisting';
 export * from './Contract';
 export * from './Homepage';
 export * from './Instantiate';

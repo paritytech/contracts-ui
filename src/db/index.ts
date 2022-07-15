@@ -12,7 +12,6 @@ export interface CodeBundleDocument {
 }
 
 export interface ContractDocument extends CodeBundleDocument {
-  abi: Record<string, unknown>;
   address: string;
 }
 
@@ -23,9 +22,19 @@ export class Database extends Dexie {
   constructor(genesisHash: string) {
     super(`contracts-ui__${genesisHash}`);
 
-    this.version(1).stores({
-      codeBundles: '++id, codeHash, name, date',
-      contracts: '++id, address, codeHash, name, date',
+    this.version(2).stores({
+      codeBundles: '++id, &codeHash, name, date',
+      contracts: '++id, &address, codeHash, name, date',
     });
+  }
+
+  public async addCodeBundle(document: CodeBundleDocument): Promise<number | null> {
+    const existing = await this.codeBundles.get({ codeHash: document.codeHash });
+
+    if (!existing) {
+      return this.codeBundles.add(document);
+    }
+
+    return Promise.resolve(null);
   }
 }
