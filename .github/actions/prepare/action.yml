@@ -3,12 +3,6 @@ description: Prepare test environment
 runs:
   using: composite
   steps:
-    - name: Download build folder
-      uses: actions/download-artifact@v3
-      with:
-        name: build
-        path: dist
-
     - name: Download node artifact
       uses: actions/download-artifact@v3
       with:

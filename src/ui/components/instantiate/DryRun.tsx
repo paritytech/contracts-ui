@@ -17,10 +17,12 @@ export function DryRun() {
 
   return (
     <SidePanel className="instantiate-outcome" header="Predicted Outcome">
-      <div className="body">
+      <div className="body" data-cy="dry-run-result">
         <div className="row">
           <div>Gas Required:</div>
-          <div>{dryRunResult?.gasRequired && <>{formatNumber(dryRunResult.gasRequired)}</>}</div>
+          <div data-cy="estimated-gas">
+            {dryRunResult?.gasRequired && <>{formatNumber(dryRunResult.gasRequired)}</>}
+          </div>
         </div>
         <div className="row">
           <div>Gas Consumed:</div>
@@ -28,7 +30,7 @@ export function DryRun() {
         </div>
         <div className="row">
           <div>Storage Deposit:</div>
-          <div>
+          <div data-cy="estimated-storage-deposit">
             {dryRunResult?.storageDeposit &&
               (() => {
                 if (dryRunResult.storageDeposit.isCharge) {
@@ -45,7 +47,7 @@ export function DryRun() {
         </div>
         <div className="row h-8">
           <div>Contract Address:</div>
-          <div>
+          <div data-cy="dry-run-account">
             {dryRunResult?.result.isOk ? (
               <Account size={26} value={dryRunResult?.result.asOk.accountId.toString()} />
             ) : (

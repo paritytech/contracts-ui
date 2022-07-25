@@ -32,7 +32,9 @@ export function Account({ className, name: propsName, size = 42, value }: Props)
             {name}
           </span>
         )}
-        <p className="text-gray-500 text-xs">{truncate(value, 4)}</p>
+        <p data-cy="account-address" className="text-gray-500 text-xs">
+          {truncate(value, 4)}
+        </p>
       </div>
     </div>
   );

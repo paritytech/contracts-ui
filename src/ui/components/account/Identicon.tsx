@@ -6,8 +6,8 @@ import copy from 'copy-to-clipboard';
 import type { Circle } from '@polkadot/ui-shared/icons/types';
 import React, { useCallback, useRef } from 'react';
 import { polkadotIcon } from '@polkadot/ui-shared';
-import { classes } from 'ui/util';
 import { Button } from '../common';
+import { classes } from 'ui/util';
 
 export interface Props extends React.HTMLAttributes<HTMLImageElement> {
   value?: string | null;
@@ -41,7 +41,14 @@ function IdenticonBase({
   try {
     return (
       <>
-        <Button data-tip data-for={tooltipId} onClick={onClick} ref={ref} variant="plain">
+        <Button
+          data-tip
+          data-for={tooltipId}
+          onClick={onClick}
+          ref={ref}
+          variant="plain"
+          data-cy="identicon"
+        >
           <svg
             className={classes('cursor-copy', className)}
             height={size}
