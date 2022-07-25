@@ -42,7 +42,7 @@
 }
 
 .sidebar .section .none-yet {
-  @apply dark:text-gray-200 text-gray-400 text-xs pl-2;
+  @apply dark:text-gray-300 text-gray-400 text-xs pl-2;
 }
 
 .sidebar .footer {
@@ -51,4 +51,8 @@
 
 .sidebar .footer > div {
   @apply flex justify-between flex-shrink-0 w-full;
+}
+
+.mobilemenu {
+  @apply dark:bg-elevation-1;
 }
