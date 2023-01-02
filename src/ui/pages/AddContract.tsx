@@ -38,7 +38,7 @@ export function AddContract() {
                   >
                     <div className="flex items-center text-base dark:text-gray-300 text-gray-500 space-x-2">
                       <CodeIcon className="h-8 w-8 dark:text-gray-500 text-gray-400 group-hover:text-gray-500" />
-                      <span>Use Existing Contract Code</span>
+                      <span>Use On-Chain Contract Code</span>
                     </div>
                     <ChevronRightIcon className="h-6 w-6 dark:text-gray-500 text-gray-400" />
                   </Link>
@@ -48,7 +48,7 @@ export function AddContract() {
                   >
                     <div className="flex items-center text-base dark:text-gray-300 text-gray-500 space-x-2">
                       <DocumentAddIcon className="h-8 w-8 dark:text-gray-500 text-gray-400 group-hover:text-gray-500" />
-                      <span>Use Existing Contract Address</span>
+                      <span>Use On-Chain Contract Address</span>
                     </div>
                     <ChevronRightIcon className="h-6 w-6 dark:text-gray-500 text-gray-400" />
                   </Link>
