@@ -7,14 +7,8 @@ import { useEffect, useState } from 'react';
 import { useBalance } from './useBalance';
 import { useToggle } from './useToggle';
 import { useApi } from 'ui/contexts/ApiContext';
-import type { OrFalsy, ValidFormField } from 'types';
+import type { OrFalsy, UseStorageDepositLimit } from 'types';
 import { BN_ZERO } from 'helpers';
-
-export interface UseStorageDepositLimit extends ValidFormField<BN> {
-  maximum: BN | undefined;
-  isActive: boolean;
-  toggleIsActive: () => void;
-}
 
 export function useStorageDepositLimit(accountId: OrFalsy<string>): UseStorageDepositLimit {
   const { api } = useApi();

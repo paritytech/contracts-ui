@@ -28,7 +28,8 @@ export function DryRunResult({
 }: Props) {
   const { decodedOutput, isError } = useDecodedOutput(result, message, registry);
   const { api } = useApi();
-  const { storageDepositValue, storageDepositType } = decodeStorageDeposit(storageDeposit);
+  const { value: storageDepositValue, type: storageDepositType } =
+    decodeStorageDeposit(storageDeposit);
   const isDispatchable = message.isMutating || message.isPayable;
 
   const dispatchError =

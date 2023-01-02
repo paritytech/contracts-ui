@@ -21,7 +21,13 @@ import {
 import { AccountSelect } from 'ui/components/account';
 import { Dropdown, Button, Buttons } from 'ui/components/common';
 import { ArgumentForm, Form, FormField, OptionsForm } from 'ui/components/form';
-import { transformUserInput, BN_ZERO } from 'helpers';
+import {
+  transformUserInput,
+  BN_ZERO,
+  getGasLimit,
+  getStorageDepositLimit,
+  decodeStorageDeposit,
+} from 'helpers';
 import { useApi, useTransactions } from 'ui/contexts';
 import { useWeight, useBalance, useArgValues } from 'ui/hooks';
 import { useStorageDepositLimit } from 'ui/hooks/useStorageDepositLimit';
@@ -35,7 +41,6 @@ export const InteractTab = ({
   contract: {
     abi,
     abi: { registry },
-    query,
     tx,
     address,
   },
@@ -57,6 +62,7 @@ export const InteractTab = ({
   //@ts-ignore
   const proofSize = useWeight(outcome?.gasRequired.proofSize.toBn());
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
+  const isCustom = refTime.mode === 'custom' || proofSize.mode === 'custom';
 
   const inputData = useMemo(() => {
     return message?.toU8a(transformUserInput(registry, message.args, argValues));
@@ -76,24 +82,27 @@ export const InteractTab = ({
 
   useEffect((): void => {
     async function dryRun() {
-      if (!message || typeof query[message.method] !== 'function') return;
+      console.log('dry run');
+
+      if (!message) return;
+
       const options = {
-        gasLimit:
-          refTime.mode === 'custom' || proofSize.mode === 'custom'
-            ? api.registry.createType('WeightV2', {
-                refTime: refTime.limit,
-                proofSize: proofSize.limit,
-              })
-            : null,
-        storageDepositLimit: storageDepositLimit.isActive ? storageDepositLimit.value : null,
+        gasLimit: getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry),
+        storageDepositLimit: getStorageDepositLimit(
+          storageDepositLimit.isActive,
+          storageDepositLimit.value
+        ),
         value: message?.isPayable ? value : undefined,
       };
+      console.log('options proof', options.gasLimit?.proofSize.toHuman());
+      console.log('options ref', options.gasLimit?.refTime.toHuman());
+
       const o = await api.call.contractsApi.call(
         accountId,
         address,
         options.value ?? BN_ZERO,
         options.gasLimit,
-        options.storageDepositLimit,
+        options.storageDepositLimit ?? null,
         inputData ?? ''
       );
       setOutcome(o);
@@ -110,19 +119,17 @@ export const InteractTab = ({
     debouncedDryRun();
   }, [
     accountId,
-    query,
-    message,
-    inputData,
-    storageDepositLimit.value,
-    refTime.limit,
-    refTime.mode,
-    value,
-    api.registry,
-    api.call.contractsApi,
     address,
+    api.call.contractsApi,
+    api.registry,
+    inputData,
+    isCustom,
+    message,
     proofSize.limit,
-    proofSize.mode,
+    refTime.limit,
+    value,
     storageDepositLimit.isActive,
+    storageDepositLimit.value,
   ]);
 
   useEffect(() => {
@@ -154,23 +161,13 @@ export const InteractTab = ({
   const newId = useRef<number>();
 
   const call = () => {
-    const { storageDeposit, gasRequired } = outcome ?? {};
-
+    if (!outcome) throw new Error('Unable to dry run contract call.');
+    const { storageDeposit, gasRequired } = outcome;
+    const { isActive, value: userInput } = storageDepositLimit;
+    const predictedStorageDeposit = decodeStorageDeposit(storageDeposit);
     const options = {
-      gasLimit:
-        refTime.mode === 'custom' || proofSize.mode === 'custom'
-          ? api.registry.createType('WeightV2', {
-              refTime: refTime.limit,
-              proofSize: proofSize.limit,
-            })
-          : gasRequired,
-      storageDepositLimit: storageDepositLimit.isActive
-        ? storageDepositLimit.value
-        : storageDeposit?.isCharge
-        ? !storageDeposit?.asCharge.eq(BN_ZERO)
-          ? storageDeposit?.asCharge
-          : undefined
-        : undefined,
+      gasLimit: getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry) ?? gasRequired,
+      storageDepositLimit: getStorageDepositLimit(isActive, userInput, predictedStorageDeposit),
       value: message?.isPayable ? value : undefined,
     };
 

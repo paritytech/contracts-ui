@@ -3,7 +3,13 @@
 
 import { DecodedEvent } from '@polkadot/api-contract/types';
 import BN from 'bn.js';
-import type { AbiMessage, ContractPromise, EventRecord, RegistryError } from '../substrate';
+import type {
+  AbiMessage,
+  ContractPromise,
+  EventRecord,
+  RegistryError,
+  Balance,
+} from '../substrate';
 
 export interface ContractDryRunParams {
   contract: ContractPromise;
@@ -21,3 +27,8 @@ export interface CallResult {
   error?: RegistryError;
   time: number;
 }
+
+export type UIStorageDeposit = {
+  value?: Balance;
+  type: 'charge' | 'refund' | 'empty';
+};

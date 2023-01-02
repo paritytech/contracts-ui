@@ -7,7 +7,7 @@ import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
 import { twMerge } from 'tailwind-merge';
 import { BN_TEN } from './bn';
-import { ApiPromise, AbiParam, Registry, CodeBundleDocument } from 'types';
+import { ApiPromise, CodeBundleDocument } from 'types';
 
 export function classes(...classLists: (string | null | undefined | false)[]) {
   return twMerge(...classLists.map(classList => (!classList ? null : classList)));
@@ -32,16 +32,8 @@ export function isValidCodeHash(value: string): boolean {
 export function isEmptyObj(value: unknown) {
   return JSON.stringify(value) === '{}';
 }
-
 export function randomAsU8a(length = 32) {
   return crypto.getRandomValues(new Uint8Array(length));
-}
-
-const encoder = new TextEncoder();
-
-export function encodeSalt(salt: Uint8Array | string = randomAsU8a()): Uint8Array {
-  if (typeof salt === 'string') return encoder.encode(salt);
-  return salt;
 }
 
 export const NOOP = (): void => undefined;
@@ -90,22 +82,6 @@ export function fromSats(api: ApiPromise, sats: BN): string {
   const [div, mod] = [sats.div(pow), sats.mod(pow)];
 
   return `${div.toString()}${!mod.eqn(0) ? `.${mod.toString()}` : ''}`;
-}
-
-export function transformUserInput(
-  registry: Registry,
-  messageArgs: AbiParam[],
-  values?: Record<string, unknown>
-): unknown[] {
-  return messageArgs.map(({ name, type: { type } }) => {
-    const value = values ? values[name] : null;
-
-    if (type === 'Balance') {
-      return registry.createType('Balance', value);
-    }
-
-    return value || null;
-  });
 }
 
 export function isValidWsUrl(s: unknown) {

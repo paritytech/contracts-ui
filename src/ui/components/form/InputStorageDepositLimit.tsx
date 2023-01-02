@@ -6,9 +6,8 @@ import { useMemo } from 'react';
 import { Meter, Switch } from '../common';
 import { InputBalance } from './InputBalance';
 import { getValidation } from './FormField';
-import type { SimpleSpread } from 'types';
+import type { SimpleSpread, UseStorageDepositLimit } from 'types';
 import { classes, isNull, isNumber } from 'helpers';
-import type { UseStorageDepositLimit } from 'ui/hooks/useStorageDepositLimit';
 
 type Props = SimpleSpread<
   React.HTMLAttributes<HTMLDivElement>,

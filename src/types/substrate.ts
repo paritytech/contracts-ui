@@ -12,6 +12,7 @@ export type {
   ChainType,
   Hash,
   ContractExecResult,
+  Balance,
 } from '@polkadot/types/interfaces';
 export type { KeyringPair } from '@polkadot/keyring/types';
 export type {
@@ -20,9 +21,11 @@ export type {
   AbiParam,
   BlueprintOptions,
   ContractOptions,
+  ContractCallOutcome,
 } from '@polkadot/api-contract/types';
 export type { ContractQuery, ContractTx } from '@polkadot/api-contract/base/types';
 export type { SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
+export type { StorageDeposit } from '@polkadot/types/interfaces/contracts';
 
 // classes
 export { Bytes, Raw, TypeDefInfo } from '@polkadot/types';

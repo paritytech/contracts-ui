@@ -11,3 +11,5 @@ export * from './useBalance';
 export * from './useFormField';
 export * from './useArgValues';
 export * from './useNewContract';
+export * from './useStorageDepositLimit';
+export * from './useToggle';

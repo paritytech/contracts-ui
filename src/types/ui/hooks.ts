@@ -34,3 +34,9 @@ export interface UseMetadata extends MetadataState {
 export type UseStepper = [number, VoidFn, VoidFn, React.Dispatch<number>];
 
 export type UseToggle = [boolean, () => void, (value: boolean) => void];
+
+export interface UseStorageDepositLimit extends ValidFormField<BN> {
+  maximum: BN | undefined;
+  isActive: boolean;
+  toggleIsActive: () => void;
+}
