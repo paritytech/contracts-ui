@@ -30,8 +30,8 @@ describe('ERC20 Contract ', () => {
     assertMoveToStep2();
   });
 
-  it(`types ${initialSupply} in the initialSupply field`, () => {
-    cy.get('.form-field.initialSupply').find('input[type="number"]').eq(0).type(`${initialSupply}`);
+  it(`types ${initialSupply} in the totalSupply field`, () => {
+    cy.get('.form-field.totalSupply').find('input[type="number"]').eq(0).type(`${initialSupply}`);
     cy.get('[data-cy="next-btn"]').should('not.be.disabled');
   });
 
