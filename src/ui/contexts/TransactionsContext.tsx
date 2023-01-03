@@ -33,64 +33,59 @@ export function TransactionsContextProvider({
   }
   async function process(id: number) {
     const tx = txs[id];
+    if (!tx) throw new Error(`No tx with id: ${id} is queued `);
 
-    if (tx) {
-      const { extrinsic, accountId, isValid, onSuccess, onError } = tx;
+    const { extrinsic, accountId, isValid, onSuccess, onError } = tx;
+    setTxs({ ...txs, [id]: { ...tx, status: Status.Processing } });
+    const injector = systemChainType.isDevelopment ? undefined : await web3FromAddress(accountId);
+    const account = systemChainType.isDevelopment ? keyring.getPair(accountId) : accountId;
 
-      setTxs({ ...txs, [id]: { ...tx, status: Status.Processing } });
+    try {
+      const unsub = await extrinsic.signAndSend(
+        account,
+        { signer: injector?.signer || undefined },
+        async result => {
+          if (result.isInBlock) {
+            const events: Record<string, number> = {};
 
-      const injector = systemChainType.isDevelopment ? undefined : await web3FromAddress(accountId);
-      const account = systemChainType.isDevelopment ? keyring.getPair(accountId) : accountId;
+            result.events.forEach(record => {
+              const { event } = record;
+              const key = `${event.section}:${event.method}`;
+              if (!events[key]) {
+                events[key] = 1;
+              } else {
+                events[key]++;
+              }
+            });
 
-      try {
-        const unsub = await extrinsic.signAndSend(
-          account,
-          { signer: injector?.signer || undefined },
-          async result => {
-            if (result.isInBlock) {
-              const events: Record<string, number> = {};
+            if (!isValid(result)) {
+              setTxs({ ...txs, [id]: { ...tx, status: Status.Error, events } });
 
-              result.events.forEach(record => {
-                const { event } = record;
-                const key = `${event.section}:${event.method}`;
-                if (!events[key]) {
-                  events[key] = 1;
-                } else {
-                  events[key]++;
-                }
-              });
+              let message = 'Transaction failed';
 
-              if (!isValid(result)) {
-                setTxs({ ...txs, [id]: { ...tx, status: Status.Error, events } });
-
-                let message = 'Transaction failed';
-
-                if (result.dispatchError?.isModule) {
-                  const decoded = api?.registry.findMetaError(result.dispatchError.asModule);
-                  message = `${decoded?.section.toUpperCase()}.${decoded?.method}: ${
-                    decoded?.docs
-                  }`;
-                }
-
-                onError && onError(result);
-
-                throw new Error(message);
+              if (result.dispatchError?.isModule) {
+                const decoded = api?.registry.findMetaError(result.dispatchError.asModule);
+                message = `${decoded?.section.toUpperCase()}.${decoded?.method}: ${decoded?.docs}`;
               }
 
-              onSuccess && (await onSuccess(result));
+              onError && onError(result);
 
-              setTxs({ ...txs, [id]: { ...tx, status: Status.Success, events } });
-
-              unsub();
-
-              nextId++;
+              throw new Error(message);
             }
+
+            onSuccess && (await onSuccess(result));
+
+            setTxs({ ...txs, [id]: { ...tx, status: Status.Success, events } });
+
+            unsub();
+
+            nextId++;
           }
-        );
-      } catch (error) {
-        setTxs({ ...txs, [id]: { ...tx, status: Status.Error } });
-        console.error(error);
-      }
+        }
+      );
+    } catch (error) {
+      setTxs({ ...txs, [id]: { ...tx, status: Status.Error } });
+      console.error(error);
     }
   }
 

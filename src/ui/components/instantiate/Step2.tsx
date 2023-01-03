@@ -15,7 +15,7 @@ import {
 import {
   isNumber,
   genRanHex,
-  transformUserInput,
+  encodeSalt,
   BN_ZERO,
   getGasLimit,
   getStorageDepositLimit,
@@ -31,7 +31,7 @@ import {
   useStorageDepositLimit,
   useBalance,
 } from 'ui/hooks';
-import { AbiMessage, OrFalsy } from 'types';
+import { AbiMessage, Balance, OrFalsy } from 'types';
 
 function validateSalt(value: OrFalsy<string>) {
   if (!!value && value.length === 66) {
@@ -53,7 +53,7 @@ export function Step2() {
   const proofSize = useWeight(dryRunResult?.gasRequired.proofSize.toBn());
   const storageDepositLimit = useStorageDepositLimit(accountId);
   const salt = useFormField<string>(genRanHex(64), validateSalt);
-  const [argValues, setArgValues] = useArgValues(deployConstructor?.args ?? [], metadata?.registry);
+  const [argValues, setArgValues, inputData] = useArgValues(deployConstructor, metadata?.registry);
   const { codeHash: codeHashUrlParam } = useParams<{ codeHash: string }>();
   const isCustom = refTime.mode === 'custom' || proofSize.mode === 'custom';
 
@@ -64,37 +64,31 @@ export function Step2() {
 
   const [isUsingSalt, toggleIsUsingSalt] = useToggle(true);
 
-  const params = useMemo(() => {
-    const inputData = deployConstructor?.toU8a(
-      transformUserInput(api.registry, deployConstructor.args, argValues)
-    );
-    return {
-      origin: accountId,
-      value: deployConstructor?.isPayable ? value : BN_ZERO,
-      gasLimit: getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry),
-      storageDepositLimit: getStorageDepositLimit(
-        storageDepositLimit.isActive,
-        storageDepositLimit.value
-      ),
-      code: codeHashUrlParam
-        ? { Existing: codeHashUrlParam }
-        : { Upload: metadata?.info.source.wasm },
-      data: inputData,
-      salt: isUsingSalt ? salt.value : undefined,
-    };
+  const params: Parameters<typeof api.call.contractsApi.instantiate> = useMemo(() => {
+    return [
+      accountId,
+      deployConstructor?.isPayable
+        ? api.registry.createType('Balance', value)
+        : api.registry.createType('Balance', BN_ZERO),
+      getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry),
+      getStorageDepositLimit(storageDepositLimit.isActive, storageDepositLimit.value, api.registry),
+      codeHashUrlParam ? { Existing: codeHashUrlParam } : { Upload: metadata?.info.source.wasm },
+      inputData ?? '',
+      isUsingSalt ? encodeSalt(salt.value) : '',
+    ];
   }, [
-    deployConstructor,
-    api.registry,
-    argValues,
     accountId,
+    deployConstructor?.isPayable,
     value,
     isCustom,
     refTime.limit,
     proofSize.limit,
+    api.registry,
     storageDepositLimit.isActive,
     storageDepositLimit.value,
     codeHashUrlParam,
     metadata?.info.source.wasm,
+    inputData,
     isUsingSalt,
     salt.value,
   ]);
@@ -102,15 +96,7 @@ export function Step2() {
   useEffect((): void => {
     async function dryRun() {
       try {
-        const result = await api.call.contractsApi.instantiate(
-          params.origin,
-          params.value ?? 0,
-          params.gasLimit,
-          params.storageDepositLimit ?? null,
-          params.code,
-          params.data ?? '',
-          params.salt ?? ''
-        );
+        const result = await api.call.contractsApi.instantiate(...params);
 
         if (JSON.stringify(dryRunResult) !== JSON.stringify(result)) {
           setDryRunResult(result);
@@ -124,17 +110,22 @@ export function Step2() {
 
   const onSubmit = () => {
     if (!dryRunResult) return;
-    const { salt, value } = params;
+
     const { storageDeposit, gasRequired } = dryRunResult;
     const { isActive, value: userInput } = storageDepositLimit;
     const predictedStorageDeposit = decodeStorageDeposit(storageDeposit);
     setData({
       ...data,
       constructorIndex,
-      salt,
-      value,
+      salt: params[6] || null,
+      value: deployConstructor?.isPayable ? (params[1] as Balance) : undefined,
       argValues,
-      storageDepositLimit: getStorageDepositLimit(isActive, userInput, predictedStorageDeposit),
+      storageDepositLimit: getStorageDepositLimit(
+        isActive,
+        userInput,
+        api.registry,
+        predictedStorageDeposit
+      ),
       gasLimit: getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry) ?? gasRequired,
     });
     setStep(3);

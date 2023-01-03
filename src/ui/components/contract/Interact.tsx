@@ -17,6 +17,8 @@ import {
   CallResult,
   ContractPromise,
   SubmittableResult,
+  ContractOptions,
+  Balance,
 } from 'types';
 import { AccountSelect } from 'ui/components/account';
 import { Dropdown, Button, Buttons } from 'ui/components/common';
@@ -48,7 +50,7 @@ export const InteractTab = ({
   const { accounts, api } = useApi();
   const { queue, process, txs } = useTransactions();
   const [message, setMessage] = useState<AbiMessage>();
-  const [argValues, setArgValues] = useArgValues(message?.args || [], registry);
+  const [argValues, setArgValues, inputData] = useArgValues(message, registry);
   const [callResults, setCallResults] = useState<CallResult[]>([]);
   const valueState = useBalance(BN_ZERO);
   const { value } = valueState;
@@ -64,10 +66,6 @@ export const InteractTab = ({
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
   const isCustom = refTime.mode === 'custom' || proofSize.mode === 'custom';
 
-  const inputData = useMemo(() => {
-    return message?.toU8a(transformUserInput(registry, message.args, argValues));
-  }, [argValues, registry, message]);
-
   useEffect((): void => {
     if (!accounts || accounts.length === 0) return;
     setAccountId(accounts[0].address);
@@ -80,31 +78,35 @@ export const InteractTab = ({
     setCallResults([]);
   }, [abi.messages, setArgValues, address]);
 
+  const params: Parameters<typeof api.call.contractsApi.call> = useMemo(() => {
+    return [
+      accountId,
+      address,
+      message?.isPayable
+        ? api.registry.createType('Balance', value)
+        : api.registry.createType('Balance', BN_ZERO),
+      getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry),
+      getStorageDepositLimit(storageDepositLimit.isActive, storageDepositLimit.value, api.registry),
+      inputData ?? '',
+    ];
+  }, [
+    accountId,
+    address,
+    api.registry,
+    inputData,
+    isCustom,
+    message?.isPayable,
+    proofSize.limit,
+    refTime.limit,
+    storageDepositLimit.isActive,
+    storageDepositLimit.value,
+    value,
+  ]);
+
   useEffect((): void => {
     async function dryRun() {
-      console.log('dry run');
-
       if (!message) return;
-
-      const options = {
-        gasLimit: getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry),
-        storageDepositLimit: getStorageDepositLimit(
-          storageDepositLimit.isActive,
-          storageDepositLimit.value
-        ),
-        value: message?.isPayable ? value : undefined,
-      };
-      console.log('options proof', options.gasLimit?.proofSize.toHuman());
-      console.log('options ref', options.gasLimit?.refTime.toHuman());
-
-      const o = await api.call.contractsApi.call(
-        accountId,
-        address,
-        options.value ?? BN_ZERO,
-        options.gasLimit,
-        options.storageDepositLimit ?? null,
-        inputData ?? ''
-      );
+      const o = await api.call.contractsApi.call(...params);
       setOutcome(o);
     }
 
@@ -117,20 +119,7 @@ export const InteractTab = ({
     }
 
     debouncedDryRun();
-  }, [
-    accountId,
-    address,
-    api.call.contractsApi,
-    api.registry,
-    inputData,
-    isCustom,
-    message,
-    proofSize.limit,
-    refTime.limit,
-    value,
-    storageDepositLimit.isActive,
-    storageDepositLimit.value,
-  ]);
+  }, [api.call.contractsApi, message, params]);
 
   useEffect(() => {
     async function processTx() {
@@ -161,31 +150,36 @@ export const InteractTab = ({
   const newId = useRef<number>();
 
   const call = () => {
-    if (!outcome) throw new Error('Unable to dry run contract call.');
+    if (!outcome || !message || !accountId) throw new Error('Unable to call contract.');
+
     const { storageDeposit, gasRequired } = outcome;
     const { isActive, value: userInput } = storageDepositLimit;
     const predictedStorageDeposit = decodeStorageDeposit(storageDeposit);
-    const options = {
+    const options: ContractOptions = {
       gasLimit: getGasLimit(isCustom, refTime.limit, proofSize.limit, api.registry) ?? gasRequired,
-      storageDepositLimit: getStorageDepositLimit(isActive, userInput, predictedStorageDeposit),
-      value: message?.isPayable ? value : undefined,
+      storageDepositLimit: getStorageDepositLimit(
+        isActive,
+        userInput,
+        api.registry,
+        predictedStorageDeposit
+      ),
+      value: message.isPayable ? (params[2] as Balance) : undefined,
     };
 
     const isValid = (result: SubmittableResult) => !result.isError && !result.dispatchError;
 
-    const extrinsic =
-      message &&
-      tx[message.method](options, ...transformUserInput(registry, message.args, argValues));
+    const extrinsic = tx[message.method](
+      options,
+      ...transformUserInput(registry, message.args, argValues)
+    );
 
-    if (extrinsic && accountId) {
-      newId.current = queue({
-        extrinsic,
-        accountId,
-        onSuccess,
-        isValid,
-      });
-      setTxId(newId.current);
-    }
+    newId.current = queue({
+      extrinsic,
+      accountId,
+      onSuccess,
+      isValid,
+    });
+    setTxId(newId.current);
   };
 
   const decodedOutput = outcome?.result?.toHuman();

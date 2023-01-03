@@ -11,9 +11,9 @@ import type {
   SubmittableResult,
   ChainType,
   WeightV2,
+  Bytes,
+  Balance,
 } from '../substrate';
-
-import type { BN } from './util';
 
 export type Status = 'loading' | 'connected' | 'error';
 
@@ -38,13 +38,13 @@ export interface ChainProperties {
 export interface InstantiateData {
   accountId: string;
   argValues?: Record<string, unknown>;
-  value?: BN;
+  value?: Balance;
   metadata?: Abi;
   name: string;
   constructorIndex: number;
-  salt?: string;
-  storageDepositLimit?: BN;
-  gasLimit: WeightV2 | null;
+  salt: string | Uint8Array | Bytes | null;
+  storageDepositLimit: Balance | null;
+  gasLimit: WeightV2 | undefined;
   codeHash?: string;
 }
 

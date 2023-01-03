@@ -19,19 +19,24 @@ export function decodeStorageDeposit(
 }
 
 export function getPredictedCharge(dryRun: UIStorageDeposit) {
-  return dryRun?.type === 'charge'
+  return dryRun.type === 'charge'
     ? !dryRun.value?.eq(BN_ZERO)
-      ? dryRun.value
-      : undefined
-    : undefined;
+      ? dryRun.value ?? null
+      : null
+    : null;
 }
 
 export function getStorageDepositLimit(
   switchOn: boolean,
   userInput: BN,
-  dryRun?: UIStorageDeposit
+  registry: Registry,
+  dryRunValue?: UIStorageDeposit
 ) {
-  return switchOn ? userInput : dryRun && getPredictedCharge(dryRun);
+  return switchOn
+    ? registry.createType('Balance', userInput)
+    : dryRunValue
+    ? getPredictedCharge(dryRunValue)
+    : null;
 }
 
 export function getGasLimit(

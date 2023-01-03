@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { BlueprintPromise, CodePromise } from '@polkadot/api-contract';
-import { encodeSalt, transformUserInput, isNumber } from '../util';
-import type { ApiPromise, InstantiateData, SubmittableExtrinsic } from 'types';
+import { transformUserInput, isNumber } from '../util';
+import type { ApiPromise, BlueprintOptions, InstantiateData, SubmittableExtrinsic } from 'types';
 
 export function createInstantiateTx(
   api: ApiPromise,
@@ -24,11 +24,11 @@ export function createInstantiateTx(
   if (isValid && metadata && isNumber(constructorIndex) && metadata && argValues) {
     const constructor = metadata.findConstructor(constructorIndex);
 
-    const options = {
-      gasLimit: api.registry.createType('WeightV2', gasLimit),
-      salt: salt ? encodeSalt(salt) : null,
-      storageDepositLimit: storageDepositLimit || undefined,
-      value: value && constructor.isPayable ? api.registry.createType('Balance', value) : undefined,
+    const options: BlueprintOptions = {
+      gasLimit,
+      salt: salt || null,
+      storageDepositLimit,
+      value,
     };
 
     const codeOrBlueprint = codeHash
