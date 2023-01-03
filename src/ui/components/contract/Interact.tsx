@@ -31,7 +31,7 @@ import {
   decodeStorageDeposit,
 } from 'helpers';
 import { useApi, useTransactions } from 'ui/contexts';
-import { useWeight, useBalance, useArgValues } from 'ui/hooks';
+import { useWeight, useBalance, useArgValues, getDecodedOutput } from 'ui/hooks';
 import { useStorageDepositLimit } from 'ui/hooks/useStorageDepositLimit';
 import { createMessageOptions } from 'ui/util/dropdown';
 
@@ -182,14 +182,14 @@ export const InteractTab = ({
     setTxId(newId.current);
   };
 
-  const decodedOutput = outcome?.result?.toHuman();
+  const decodedOutput = outcome && message && getDecodedOutput(outcome, message, registry);
 
   const callDisabled =
     !refTime.isValid ||
     !proofSize.isValid ||
     txs[txId]?.status === 'processing' ||
     !!outcome?.result.isErr ||
-    (!!decodedOutput && typeof decodedOutput === 'object' && 'Err' in decodedOutput);
+    !!decodedOutput?.isError;
 
   const isDispatchable = message?.isMutating || message?.isPayable;
 
