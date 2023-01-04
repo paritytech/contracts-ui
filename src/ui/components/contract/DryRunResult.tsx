@@ -10,8 +10,7 @@
 import { AbiMessage } from '@polkadot/api-contract/types';
 import { DryRunError } from './DryRunError';
 import { OutcomeItem } from './OutcomeItem';
-import { getDecodedOutput } from 'ui/hooks';
-import { classes, decodeStorageDeposit } from 'helpers';
+import { classes, decodeStorageDeposit, getDecodedOutput } from 'helpers';
 import { ContractExecResult, Registry } from 'types';
 import { useApi } from 'ui/contexts';
 

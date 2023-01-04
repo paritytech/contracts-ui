@@ -29,9 +29,10 @@ import {
   getGasLimit,
   getStorageDepositLimit,
   decodeStorageDeposit,
+  getDecodedOutput,
 } from 'helpers';
 import { useApi, useTransactions } from 'ui/contexts';
-import { useWeight, useBalance, useArgValues, getDecodedOutput } from 'ui/hooks';
+import { useWeight, useBalance, useArgValues } from 'ui/hooks';
 import { useStorageDepositLimit } from 'ui/hooks/useStorageDepositLimit';
 import { createMessageOptions } from 'ui/util/dropdown';
 
