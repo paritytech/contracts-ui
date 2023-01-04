@@ -35,19 +35,11 @@ export function getDecodedOutput(
   let isError = true;
   if (result.isOk) {
     const flags = result.asOk.flags.toHuman();
-    const asOKData = result.asOk.data.toU8a(true);
     isError = flags.includes('Revert');
     const returnTypeName = getReturnTypeName(returnType);
-
     const r = returnType
-      ? registry
-          .createTypeUnsafe(returnTypeName, [
-            returnTypeName.startsWith('Vec') ? [asOKData] : asOKData,
-            { isPedantic: true },
-          ])
-          .toHuman()
+      ? registry.createTypeUnsafe(returnTypeName, [result.asOk.data]).toHuman()
       : '()';
-
     const o = isOk(r) ? r.Ok : isErr(r) ? r.Err : r;
 
     const errorText = isErr(o)
