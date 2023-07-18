@@ -3,7 +3,17 @@
 
 import { useEffect, useState } from 'react';
 import { useApi } from 'ui/contexts/ApiContext';
-import { Abi, ApiPromise, FileState, MetadataState, UseMetadata, Validation, VoidFn } from 'types';
+import {
+  Abi,
+  ApiPromise,
+  FileState,
+  MetadataState,
+  Raw,
+  TypeDef,
+  UseMetadata,
+  Validation,
+  VoidFn,
+} from 'types';
 
 type OnChange = (_: FileState | undefined, __?: Record<string, unknown>) => void;
 type OnRemove = VoidFn;
@@ -25,7 +35,7 @@ interface Callbacks {
 function deriveFromJson(
   options: DeriveOptions,
   source?: Record<string, unknown>,
-  api?: ApiPromise | null
+  api?: ApiPromise
 ): MetadataState {
   if (!source) {
     return EMPTY;
@@ -43,7 +53,7 @@ function deriveFromJson(
       name,
       value,
       isSupplied: true,
-      ...validate(value, options),
+      ...validate(value, options, api),
     };
   } catch (e) {
     console.error(e);
@@ -53,7 +63,7 @@ function deriveFromJson(
       name: '',
       value,
       isSupplied: true,
-      ...validate(value, options),
+      ...validate(value, options, api),
     };
   }
 }
@@ -66,7 +76,11 @@ const EMPTY: MetadataState = {
   message: null,
 };
 
-function validate(metadata: Abi | undefined, { isWasmRequired }: Options): Validation {
+function validate(
+  metadata: Abi | undefined,
+  { isWasmRequired }: Options,
+  api?: ApiPromise
+): Validation {
   if (!metadata) {
     return {
       isValid: false,
@@ -75,6 +89,27 @@ function validate(metadata: Abi | undefined, { isWasmRequired }: Options): Valid
         'Invalid contract file format. Please upload the generated .contract bundle for your smart contract.',
     };
   }
+
+  const environmentTypes = ['AccountId', 'Balance', 'Hash', 'BlockNumber'];
+  const keys = ['accountId', 'balance', 'hashType', 'blockNumber'];
+
+  const typesValidation = environmentTypes.map((type, index) => {
+    if (!metadata) return;
+    const onChainTypeBitLength = (api?.registry.createType(type) as Raw).bitLength();
+    const contractTypeDef = metadata.environment.get(keys[index]);
+    const contractTypeBitlength = (
+      metadata.registry.createType((contractTypeDef as TypeDef).type) as Raw
+    ).bitLength();
+    return onChainTypeBitLength === contractTypeBitlength;
+  });
+
+  if (typesValidation.includes(false))
+    return {
+      isValid: false,
+      isError: true,
+      isSuccess: false,
+      message: 'The types defined in your contract environment do not match chain types!',
+    };
 
   return {
     isValid: true,
