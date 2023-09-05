@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { SimpleSpread, ValidFormField } from 'types';
-import { Dropdown } from 'ui/components/common/Dropdown';
+import { Dropdown } from 'ui/components/common/dropdown';
 
 type Props = SimpleSpread<React.HTMLAttributes<HTMLDivElement>, ValidFormField<boolean>>;
 

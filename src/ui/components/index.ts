@@ -8,4 +8,4 @@ export * from './form';
 export * from './homepage';
 export * from './instantiate';
 export * from './message';
-export * from './AwaitApis';
+export * from './await-apis';

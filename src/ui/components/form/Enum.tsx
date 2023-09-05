@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useCallback, useState } from 'react';
-import { Dropdown } from '../common/Dropdown';
-import { ArgSignature } from '../message/ArgSignature';
-import { FormField, getValidation } from './FormField';
+import { Dropdown } from '../common/dropdown';
+import { ArgSignature } from '../message/arg-signature';
+import { FormField, getValidation } from './form-field';
 import { isNumber } from 'lib/util';
 import { ArgComponentProps, OrFalsy, TypeDef } from 'types';
 import { useApi } from 'ui/contexts';
-import { getInitValue } from 'lib/initValue';
+import { getInitValue } from 'lib/init-value';
 
 interface Props extends ArgComponentProps<Record<string, unknown>> {
   components: React.ComponentType<ArgComponentProps<unknown>>[];

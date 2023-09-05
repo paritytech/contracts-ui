@@ -1,5 +1,5 @@
 // Copyright 2022 @paritytech/contracts-ui authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-export * from './CustomEndpoint';
-export * from './ThemeMode';
+export * from './custom-endpoint';
+export * from './theme-mode';

@@ -1,7 +1,7 @@
 // Copyright 2022 @paritytech/contracts-ui authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { MessageSignature } from '../components/message/MessageSignature';
+import { MessageSignature } from '../components/message/message-signature';
 import {
   AbiConstructor,
   AbiMessage,

@@ -1,10 +1,10 @@
 // Copyright 2022 @paritytech/contracts-ui authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { DryRun } from './DryRun';
-import { Step1 } from './Step1';
-import { Step2 } from './Step2';
-import { Step3 } from './Step3';
+import { DryRun } from './dry-run';
+import { Step1 } from './step-1';
+import { Step2 } from './step-2';
+import { Step3 } from './step-3';
 import { useInstantiate } from 'ui/contexts';
 
 export function Wizard() {

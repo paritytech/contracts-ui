@@ -4,7 +4,7 @@
 import { FolderOpenIcon, TrashIcon } from '@heroicons/react/outline';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ContractRow } from '../contract/ContractRow';
+import { ContractRow } from '../contract/contract-row';
 import { ForgetAllContractsModal } from 'ui/components/modal';
 import { useDatabase } from 'ui/contexts';
 import { useDbQuery } from 'ui/hooks';

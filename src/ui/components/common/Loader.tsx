@@ -1,7 +1,7 @@
 // Copyright 2022 @paritytech/contracts-ui authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Spinner } from './Spinner';
+import { Spinner } from './spinner';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isLoading?: boolean;

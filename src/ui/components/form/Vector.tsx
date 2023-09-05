@@ -5,11 +5,11 @@ import { encodeTypeDef } from '@polkadot/types';
 import React, { useCallback } from 'react';
 import { MinusIcon, PlusIcon } from '@heroicons/react/outline';
 import { Button, Buttons } from '../common';
-import { FormField } from './FormField';
+import { FormField } from './form-field';
 import { TypeDef, ArgComponentProps, OrFalsy } from 'types';
 
 import { useApi } from 'ui/contexts';
-import { getInitValue } from 'lib/initValue';
+import { getInitValue } from 'lib/init-value';
 
 interface Props extends ArgComponentProps<unknown[]> {
   component: React.ComponentType<ArgComponentProps<unknown>>;
@@ -43,7 +43,7 @@ export function Vector({
   return (
     <div>
       <div className={'flex justify-start'}>
-        <label className="arg-label flex-1 font-bold text-gray-600 dark:text-white">
+        <label className="flex-1 font-bold text-gray-600 arg-label dark:text-white">
           {`Vec<${encodeTypeDef(registry, subType)}>`}
         </label>
         <Buttons>
@@ -53,7 +53,7 @@ export function Vector({
             onClick={onAddRow}
             variant="default"
           >
-            <PlusIcon className="h-3 w-3 dark:text-white" />
+            <PlusIcon className="w-3 h-3 dark:text-white" />
           </Button>
           <Button
             className="px-2 dark:text-white"
@@ -61,7 +61,7 @@ export function Vector({
             onClick={onRemoveRow}
             variant="default"
           >
-            <MinusIcon className="h-3 w-3 dark:text-white" />
+            <MinusIcon className="w-3 h-3 dark:text-white" />
           </Button>
         </Buttons>
       </div>

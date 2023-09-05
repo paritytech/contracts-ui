@@ -3,7 +3,7 @@
 
 import { encodeTypeDef } from '@polkadot/types';
 import { useCallback } from 'react';
-import { FormField } from './FormField';
+import { FormField } from './form-field';
 import { ArgComponentProps, OrFalsy, TypeDef } from 'types';
 
 interface Props extends ArgComponentProps<unknown[]> {

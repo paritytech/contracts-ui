@@ -1,6 +1,6 @@
 // Copyright 2022 @paritytech/contracts-ui authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-export * from './Account';
-export * from './Select';
-export * from './Identicon';
+export * from './account';
+export * from './select';
+export * from './identicon';

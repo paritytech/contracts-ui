@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { ResultsOutput } from './ResultsOutput';
+import { ResultsOutput } from './results-output';
 import {
   AbiMessage,
   ContractExecResult,
@@ -19,14 +19,14 @@ import { ArgumentForm, Form, FormField, OptionsForm } from 'ui/components/form';
 import { BN_ZERO } from 'lib/bn';
 import { useApi, useTransactions } from 'ui/contexts';
 import { useWeight, useBalance, useArgValues } from 'ui/hooks';
-import { useStorageDepositLimit } from 'ui/hooks/useStorageDepositLimit';
+import { useStorageDepositLimit } from 'ui/hooks/use-storage-deposit-limit';
 import { createMessageOptions } from 'ui/util/dropdown';
 import {
   decodeStorageDeposit,
   getGasLimit,
   getStorageDepositLimit,
   transformUserInput,
-} from 'lib/callOptions';
+} from 'lib/call-options';
 import { getDecodedOutput } from 'lib/output';
 
 interface Props {

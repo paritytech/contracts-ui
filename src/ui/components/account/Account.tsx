@@ -1,7 +1,7 @@
 // Copyright 2022 @paritytech/contracts-ui authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Identicon } from './Identicon';
+import { Identicon } from './identicon';
 import { classes, truncate } from 'lib/util';
 import { OrFalsy } from 'types';
 import { useApi } from 'ui/contexts';

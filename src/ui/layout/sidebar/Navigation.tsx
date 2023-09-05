@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { DocumentAddIcon, CollectionIcon } from '@heroicons/react/outline';
-import { NavLink } from './NavLink';
+import { NavLink } from './nav-link';
 
 export function Navigation() {
   return (

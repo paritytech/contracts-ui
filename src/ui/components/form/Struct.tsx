@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { encodeTypeDef } from '@polkadot/types';
-import { FormField } from './FormField';
+import { FormField } from './form-field';
 import { TypeDefInfo, ArgComponentProps } from 'types';
 
 type Props = ArgComponentProps<Record<string, unknown>> & {

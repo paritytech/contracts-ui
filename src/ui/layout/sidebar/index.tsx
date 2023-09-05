@@ -1,11 +1,11 @@
 // Copyright 2022 @paritytech/contracts-ui authors & contributors
 // SPDX-License-Identifier: GPL-3.0-only
 
-import { Footer } from './Footer';
-import { MobileMenu } from './MobileMenu';
-import { Navigation } from './Navigation';
-import { NetworkAndUser } from './NetworkAndUser';
-import { QuickLinks } from './QuickLinks';
+import { Footer } from './footer';
+import { MobileMenu } from './mobile-menu';
+import { Navigation } from './navigation';
+import { NetworkAndUser } from './network-and-user';
+import { QuickLinks } from './quick-link';
 
 export function Sidebar() {
   return (

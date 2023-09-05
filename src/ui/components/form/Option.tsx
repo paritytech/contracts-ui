@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import { useCallback, useEffect, useRef } from 'react';
-import { Switch } from '../common/Switch';
-import { Input } from './Input';
+import { Switch } from '../common/switch';
+import { Input } from './input';
 import { ArgComponentProps, OrFalsy, Registry, TypeDef } from 'types';
 import { useApi } from 'ui/contexts';
 import { NOOP } from 'lib/util';
-import { useToggle } from 'ui/hooks/useToggle';
-import { getInitValue } from 'lib/initValue';
+import { useToggle } from 'ui/hooks/use-toggle';
+import { getInitValue } from 'lib/init-value';
 
 interface Props extends ArgComponentProps<unknown> {
   component: React.ComponentType<ArgComponentProps<unknown>>;

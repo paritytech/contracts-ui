@@ -4,7 +4,7 @@
 import { ChatAltIcon, CogIcon } from '@heroicons/react/outline';
 import { useCallback, useState } from 'react';
 import { HelpModal } from 'ui/components/modal';
-import { SettingsModal } from 'ui/components/modal/SettingsModal';
+import { SettingsModal } from 'ui/components/modal/settings-modal';
 
 type ModalName = 'help' | 'settings';
 
@@ -26,19 +26,19 @@ export function Footer() {
     <footer className="footer">
       <div>
         <a
-          className="text-md flex cursor-pointer content-center items-center py-2 font-medium text-gray-600 hover:text-gray-400 dark:text-gray-300 dark:hover:text-gray-300 md:py-0 md:text-xs md:dark:text-gray-400"
+          className="flex items-center content-center py-2 font-medium text-gray-600 cursor-pointer text-md hover:text-gray-400 dark:text-gray-300 dark:hover:text-gray-300 md:py-0 md:text-xs md:dark:text-gray-400"
           onClick={() => setVisibleModal('help')}
         >
-          <ChatAltIcon aria-hidden="true" className="mr-2 h-4 w-4 dark:text-gray-500" />
+          <ChatAltIcon aria-hidden="true" className="w-4 h-4 mr-2 dark:text-gray-500" />
           Help &amp; Feedback
         </a>
         <a
-          className="text-md flex cursor-pointer content-center items-center py-2 font-medium text-gray-600 hover:text-gray-400 dark:text-gray-300 dark:hover:text-gray-300 md:py-0 md:text-xs md:dark:text-gray-400"
+          className="flex items-center content-center py-2 font-medium text-gray-600 cursor-pointer text-md hover:text-gray-400 dark:text-gray-300 dark:hover:text-gray-300 md:py-0 md:text-xs md:dark:text-gray-400"
           onClick={() => setVisibleModal('settings')}
         >
           <CogIcon
             aria-hidden="true"
-            className="mr-2 h-4 w-4 text-gray-600 hover:text-gray-400 dark:text-gray-500 dark:hover:text-gray-300"
+            className="w-4 h-4 mr-2 text-gray-600 hover:text-gray-400 dark:text-gray-500 dark:hover:text-gray-300"
           />
           <div className="text-md dark:text-gray-300 md:hidden">Settings</div>
         </a>
